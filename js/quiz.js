@@ -38,7 +38,47 @@ function startQuiz(setId) {
 
   document.getElementById('quizName').textContent = set.name;
   showView('quiz');
+  renderProgressBoxes();
   renderQ();
+}
+
+// ─── PROGRESS BOXES ──────────────────────────────────────────────────────────
+function renderProgressBoxes() {
+  const container = document.getElementById('progressBoxes');
+  container.innerHTML = Q.list.map((_, i) => 
+    `<div class="progress-box" data-index="${i}" onclick="jumpToQuestion(${i})">${i + 1}</div>`
+  ).join('');
+  updateProgressBoxes();
+}
+
+function updateProgressBoxes() {
+  const boxes = document.querySelectorAll('.progress-box');
+  boxes.forEach((box, i) => {
+    box.className = 'progress-box';
+    
+    const answer = Q.answers.find(a => a.idx === i);
+    
+    if (i === Q.idx) {
+      box.classList.add('current');
+    } else if (answer) {
+      box.classList.add(answer.isCorrect ? 'correct' : 'wrong');
+    } else {
+      box.classList.add('unanswered');
+    }
+  });
+}
+
+function jumpToQuestion(targetIdx) {
+  // Only allow jumping if the question has been answered
+  const targetAnswer = Q.answers.find(a => a.idx === targetIdx);
+  if (!targetAnswer && targetIdx !== Q.idx) {
+    showToast('Please answer questions in order', 'error');
+    return;
+  }
+  
+  Q.idx = targetIdx;
+  renderQ();
+  updateProgressBoxes();
 }
 
 // ─── RENDER QUESTION ─────────────────────────────────────────────────────────
@@ -54,6 +94,7 @@ function renderQ() {
       <span class="opt-key">${KEYS[i]}</span>
       <span>${esc(o)}</span>
     </button>`).join('');
+  updateProgressBoxes();
 }
 
 // ─── PICK ANSWER ─────────────────────────────────────────────────────────────
@@ -65,6 +106,10 @@ function pick(sel) {
   if (sel !== cor) btns[sel].classList.add('wrong');
   else             btns[sel].classList.add('selected');
   Q.answers.push({ idx: Q.idx, selected: sel, isCorrect: sel === cor });
+  
+  // Update progress boxes immediately after answering
+  updateProgressBoxes();
+  
   if (q.explanation) {
     document.getElementById('expBox').innerHTML = `
       <div class="explanation"><strong>Explanation:</strong> ${esc(q.explanation)}</div>`;
