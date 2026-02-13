@@ -362,3 +362,20 @@ pre{
     border-radius:3px;
   }
 }
+
+/* ── FOOTER ── */
+.footer{
+  text-align:center;
+  padding:40px 20px 20px;
+  margin-top:60px;
+  border-top:1px solid var(--border);
+}
+.footer p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.footer strong{
+  color:var(--accent);
+  font-weight:600;
+}
