@@ -8,8 +8,6 @@
 
 Let me be honest - I didn't start with some grand vision. I just thought:
 - Quizzes are fun
-- I need to pass this class
-- APIs seem cool but kinda scary
 - Bootstrap exists so I don't have to make things look good from scratch (thank god)
 
 But then... I actually got into it. Like really into it. 
