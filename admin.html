@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RiddlerQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ── UPLOAD MODAL ────────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <h2>Upload Question Set</h2>
+    <p class="sub">Save a quiz set to your browser for quick access</p>
+
+    <!-- ⚠️ Persistence warning -->
+    <div class="banner banner-warning">
+      <span class="banner-icon">⚠️</span>
+      <div>
+        <strong>Not permanent — browser only</strong>
+        Uploaded sets are stored in your browser's local storage. They will
+        disappear if you clear your browser data, use a private/incognito window,
+        or switch to a different device. For permanent sets that everyone can
+        access, add JSON files directly to the <code style="background:rgba(0,0,0,.3);padding:1px 5px;border-radius:4px">questions/</code> folder in the repo.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Set Name</label>
+      <input class="form-input" id="setNameInput" placeholder="e.g. Calculus 101, Python Basics…"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Question File (.json)</label>
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-icon">📂</div>
+        <p><strong>Click to browse</strong> or drag &amp; drop</p>
+        <p style="font-size:12px;margin-top:4px">.json files only</p>
+        <div class="drop-zone-file" id="dropZoneFile"></div>
+        <div class="drop-zone-error" id="dropZoneError"></div>
+      </div>
+      <input type="file" id="fileInput" accept=".json" style="display:none"/>
+    </div>
+
+    <div class="format-card">
+      <h3>REQUIRED FORMAT</h3>
+      <pre>[
+  {
+    "question": "What does CSS stand for?",
+    "options": ["Cascading Style Sheets", "Creative Style System",
+                "Computer Style Syntax", "Colorful Style Sheets"],
+    "answer": 0,
+    "explanation": "Optional — shown after answering."
+  }
+]</pre>
+      <p class="format-note">
+        <code>answer</code> = index of correct option (0-based). &nbsp;
+        <code>explanation</code> is optional.
+      </p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn" onclick="closeUploadModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitUpload()">Save to Browser</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE MODAL ────────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:380px">
+    <h2>Remove Set?</h2>
+    <p class="sub" id="deleteMsg"></p>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()" style="border-color:var(--danger);color:var(--danger)">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ─────────────────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <!-- DASHBOARD -->
+  <div class="view" id="view-dashboard">
+    <nav class="topbar">
+      <a class="logo" href="admin.html">Riddler<span>Q</span></a>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="goHistory()">📊 History</button>
+        <button class="btn btn-primary btn-sm" onclick="openUploadModal()">+ Upload Set</button>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="page-header">
+        <h1>Question Sets</h1>
+        <p>All sets loaded from the <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent)">questions/</code> folder — always up to date with the repo</p>
+      </div>
+      <div id="setsContainer"></div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="view" id="view-history">
+    <nav class="topbar">
+      <a class="logo" href="admin.html">Riddler<span>Q</span></a>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="goHome()">← Dashboard</button>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="page-header">
+        <h1>Score History</h1>
+        <p>Your past quiz attempts — stored in this browser</p>
+      </div>
+      <div id="historyContent"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="questions/sets.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

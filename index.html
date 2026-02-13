@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RiddlerQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- QUIZ -->
+  <div class="view" id="view-quiz">
+    <div>
+      <div class="quiz-topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="exitQuiz()" title="Exit">✕</button>
+          <span class="quiz-set-name" id="quizName"></span>
+        </div>
+        <span class="quiz-counter" id="counter"></span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-fill" id="progFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-body">
+      <p class="question-text" id="qText"></p>
+      <div class="options-list" id="optList"></div>
+      <div id="expBox"></div>
+      <div class="quiz-footer">
+        <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQ()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="view" id="view-results">
+    <nav class="topbar">
+      <a class="logo" href="admin.html">Riddler<span>Q</span></a>
+      <div class="topbar-right">
+        <span style="font-size:13px;color:var(--muted)" id="resSet"></span>
+      </div>
+    </nav>
+
+    <div class="container-sm">
+      <div class="results-hero">
+        <div class="ring">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="56" fill="none" stroke="#21262d" stroke-width="10"/>
+            <circle id="arc" cx="65" cy="65" r="56" fill="none"
+              stroke="#58a6ff" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="352" stroke-dashoffset="352"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ringPct"></span>
+            <span class="ring-sub">score</span>
+          </div>
+        </div>
+        <h2 id="resTitle"></h2>
+        <p id="resSub"></p>
+      </div>
+
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="results-btns">
+        <button class="btn btn-primary" onclick="retake()">↺ Retake</button>
+        <button class="btn" onclick="goHome()">⌂ Dashboard</button>
+        <button class="btn" onclick="goHistory()">📊 History</button>
+      </div>
+
+      <div class="review-section">
+        <h3>Answer Review <span style="font-size:13px;font-weight:400;color:var(--muted)">— click to expand</span></h3>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+
+      <div style="height:48px"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="questions/sets.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>
