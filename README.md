@@ -32,13 +32,6 @@ But then... I actually got into it. Like really into it.
 - Yeah yeah, I know it's "old school" but it WORKS
 - Made DOM manipulation so much easier
 - Shortened my code significantly
-- Professor said it was okay to use so ¯\_(ツ)_/¯
-
-**OpenTDB API**
-- This is the cool part - FREE trivia questions!
-- No database needed (one less thing to worry about)
-- Thousands of questions across different categories
-- Made me feel like a real developer connecting to an API
 
 ### Why Single Page Application?
 
