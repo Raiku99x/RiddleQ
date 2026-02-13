@@ -16,6 +16,26 @@ function goHistory() { window.location.href = 'admin.html?view=history'; }
 function exitQuiz()  { if (confirm('Exit? Your progress will be lost.')) goHome(); }
 function retake()    { window.location.href = `index.html?set=${encodeURIComponent(Q.setId)}`; }
 
+// ─── FULLSCREEN ───────────────────────────────────────────────────────────────
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(err => {
+      showToast('Fullscreen not supported', 'error');
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// Update fullscreen button icon when fullscreen state changes
+document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('fullscreenBtn');
+  if (btn) {
+    btn.textContent = document.fullscreenElement ? '⛶' : '⛶';
+    btn.title = document.fullscreenElement ? 'Exit Fullscreen' : 'Toggle Fullscreen';
+  }
+});
+
 // ─── START ────────────────────────────────────────────────────────────────────
 function startQuiz(setId) {
   const set = resolveSet(setId);   // synchronous — no fetch
