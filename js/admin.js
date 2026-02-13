@@ -1,18 +1,125 @@
 // ─── ROUTING ──────────────────────────────────────────────────────────────────
+let currentCategory = null;
+
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + id)?.classList.add('active');
   window.scrollTo(0, 0);
 }
 function goHistory() { renderHistory(); showView('history'); }
+function goToCategories() { loadCategories(); }
 function goHome()    { loadDashboard(); }
 
-// ─── DASHBOARD ────────────────────────────────────────────────────────────────
-function loadDashboard() {
-  showView('dashboard');
+// ─── CATEGORIES ───────────────────────────────────────────────────────────────
+function loadCategories() {
+  showView('categories');
   const folderSets   = FolderSets.getAll();
   const uploadedSets = UploadedSets.getAll();
-  renderSets(folderSets, uploadedSets);
+  const allSets = [...folderSets, ...uploadedSets];
+  
+  // Extract unique categories from sets
+  const categories = {};
+  allSets.forEach(set => {
+    const cat = set.category || 'General';
+    if (!categories[cat]) {
+      categories[cat] = {
+        name: cat,
+        count: 0,
+        icon: getCategoryIcon(cat)
+      };
+    }
+    categories[cat].count++;
+  });
+  
+  renderCategories(categories);
+}
+
+function renderCategories(categories) {
+  const container = document.getElementById('categoriesContainer');
+  const cats = Object.values(categories);
+  
+  if (cats.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <h3>No question sets found</h3>
+        <p>Add a set to <code>questions/sets.js</code> — see README for instructions</p>
+      </div>`;
+    return;
+  }
+  
+  container.innerHTML = `
+    <div class="sets-grid">
+      ${cats.map(cat => `
+        <div class="set-card category-card" onclick="selectCategory('${esc(cat.name)}')">
+          <div class="set-card-icon">${cat.icon}</div>
+          <h3>${esc(cat.name)}</h3>
+          <div class="set-card-meta">
+            ${cat.count} quiz set${cat.count !== 1 ? 's' : ''} available
+          </div>
+          <div class="set-card-footer">
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); selectCategory('${esc(cat.name)}')">
+              View Sets →
+            </button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function selectCategory(categoryName) {
+  currentCategory = categoryName;
+  loadDashboard(categoryName);
+}
+
+function getCategoryIcon(category) {
+  const icons = {
+    'Math': '🔢',
+    'Mathematics': '🔢',
+    'Science': '🔬',
+    'History': '📜',
+    'Geography': '🌍',
+    'English': '📚',
+    'Literature': '📖',
+    'Programming': '💻',
+    'Computer Science': '🖥️',
+    'Physics': '⚡',
+    'Chemistry': '🧪',
+    'Biology': '🧬',
+    'Music': '🎵',
+    'Art': '🎨',
+    'Sports': '⚽',
+    'General': '📝',
+    'Trivia': '🎯',
+    'Language': '🗣️',
+    'Economics': '💰',
+    'Business': '💼'
+  };
+  return icons[category] || '📘';
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+function loadDashboard(categoryName = null) {
+  showView('dashboard');
+  
+  if (categoryName) currentCategory = categoryName;
+  if (!currentCategory) currentCategory = 'General';
+  
+  const folderSets   = FolderSets.getAll();
+  const uploadedSets = UploadedSets.getAll();
+  
+  // Filter sets by category
+  const filteredFolder = folderSets.filter(s => (s.category || 'General') === currentCategory);
+  const filteredUploaded = uploadedSets.filter(s => (s.category || 'General') === currentCategory);
+  
+  // Update header
+  document.getElementById('categoryTitle').textContent = currentCategory;
+  document.getElementById('categoryDesc').innerHTML = `
+    ${filteredFolder.length + filteredUploaded.length} quiz set${(filteredFolder.length + filteredUploaded.length) !== 1 ? 's' : ''} in this category
+  `;
+  
+  renderSets(filteredFolder, filteredUploaded);
 }
 
 function renderSets(folderSets, uploadedSets) {
@@ -254,6 +361,14 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('deleteModal')?.addEventListener('click', function(e) { if(e.target===this) closeDeleteModal(); });
 
   const p = new URLSearchParams(window.location.search);
-  if (p.get('view') === 'history') { renderHistory(); showView('history'); }
-  else                             { loadDashboard(); }
+  if (p.get('view') === 'history') { 
+    renderHistory(); 
+    showView('history'); 
+  } else if (p.get('category')) {
+    // If category is in URL, go directly to that category
+    selectCategory(decodeURIComponent(p.get('category')));
+  } else {
+    // Default: show categories first
+    loadCategories();
+  }
 });
