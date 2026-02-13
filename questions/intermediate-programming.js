@@ -6,8 +6,8 @@ if (typeof QUESTION_SETS === 'undefined') {
 }
 
 QUESTION_SETS.push({
-  id: 'intermediate-lists',
-  name: 'LIST',
+  id: 'intermediate-list',
+  name: 'LIST-Q',
   category: 'Intermediate Programming',
   description: 'Python list operations and output prediction',
   questions: [
