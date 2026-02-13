@@ -106,6 +106,12 @@ body{
   border-color:var(--accent);background:var(--surface2);
   transform:translateY(-2px);box-shadow:0 4px 20px rgba(88,166,255,.08);
 }
+.category-card{
+  min-height:160px;
+}
+.category-card .set-card-icon{
+  font-size:32px;
+}
 .set-card-icon{
   width:40px;height:40px;border-radius:8px;
   background:var(--accent-dim);display:flex;
