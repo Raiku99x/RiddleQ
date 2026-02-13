@@ -198,6 +198,48 @@ pre{
 }
 .quiz-set-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px}
 .quiz-counter{color:var(--muted);font-size:14px}
+
+/* ── PROGRESS BOXES ── */
+.progress-boxes{
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:12px 28px;background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.progress-box{
+  width:32px;height:32px;min-width:32px;
+  border-radius:6px;border:2px solid var(--border);
+  background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;
+  color:var(--muted);cursor:pointer;
+  transition:all .14s;
+}
+.progress-box:hover{
+  border-color:var(--accent);
+  transform:scale(1.08);
+}
+.progress-box.current{
+  border-color:var(--accent);
+  background:var(--accent-dim);
+  color:var(--accent);
+  box-shadow:0 0 0 3px rgba(88,166,255,.12);
+}
+.progress-box.correct{
+  border-color:var(--success);
+  background:var(--success);
+  color:#0d1117;
+}
+.progress-box.wrong{
+  border-color:var(--danger);
+  background:var(--danger);
+  color:#fff;
+}
+.progress-box.unanswered{
+  border-color:var(--border);
+  background:var(--surface2);
+  color:var(--muted);
+}
+
 .progress-wrap{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
 .progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s ease}
 
