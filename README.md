@@ -35,7 +35,7 @@ But then... I actually got into it. Like really into it.
 
 ### Why Single Page Application?
 
-Honestly? I learned about SPAs in class and thought "that sounds fancy, let me try it." Turns out:
+Honestly? I learned about SPAs and thought "that sounds fancy, let me try it." Turns out:
 - No annoying page refreshes
 - Everything feels smooth and modern
 - It's actually not that hard once you get the hang of it
@@ -86,7 +86,8 @@ RiddleQ/
 ├── styles.css     
 ├── js/        
 │   ├── quiz.js        
-│   └── admin.js         
+│   └── admin.js
+│   └── storage.js    
 └── questions/             
 ```
 
