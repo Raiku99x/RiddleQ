@@ -175,7 +175,7 @@ function renderResults(e) {
   arc.style.strokeDashoffset = 352;
   setTimeout(() => { arc.style.transition='stroke-dashoffset 1s ease'; arc.style.strokeDashoffset=352-(pct/100)*352; }, 80);
   document.getElementById('ringPct').textContent = pct + '%';
-  const msgs = [[100,'🏆 Perfect!','Absolutely flawless!'],[80,'🎉 Excellent!',`${score}/${total} correct`],[60,'👍 Good Job!',`${score}/${total} correct`],[40,'📚 Keep Studying',`${score}/${total} correct`],[0,'💪 Try Again!',`${score}/${total} correct`]];
+  const msgs = [[100,'Perfect!','Absolutely flawless!'],[80,'Excellent!',`${score}/${total} correct`],[60,'Good Job!',`${score}/${total} correct`],[40,'Keep Studying',`${score}/${total} correct`],[0,'Try Again!',`${score}/${total} correct`]];
   const [,title,sub] = msgs.find(([t])=>pct>=t);
   document.getElementById('resTitle').textContent = title;
   document.getElementById('resSub').textContent   = sub;
