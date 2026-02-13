@@ -366,14 +366,14 @@ pre{
 /* ── FOOTER ── */
 .footer{
   text-align:center;
-  padding:40px 20px 20px;
-  margin-top:60px;
+  padding:20px 20px 16px;
+  margin-top:32px;
   border-top:1px solid var(--border);
 }
 .footer p{
   color:var(--muted);
-  font-size:13px;
-  line-height:1.6;
+  font-size:12px;
+  line-height:1.4;
 }
 .footer strong{
   color:var(--accent);
