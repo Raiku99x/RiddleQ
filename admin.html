@@ -83,8 +83,8 @@
 <!-- ── APP ─────────────────────────────────────────────────────────────────── -->
 <div id="app">
 
-  <!-- DASHBOARD -->
-  <div class="view" id="view-dashboard">
+  <!-- CATEGORIES (NEW - First Screen) -->
+  <div class="view" id="view-categories">
     <nav class="topbar">
       <a class="logo" href="admin.html">Riddler<span>Q</span></a>
       <div class="topbar-right">
@@ -94,8 +94,26 @@
     </nav>
     <div class="container">
       <div class="page-header">
-        <h1>Question Sets</h1>
-        <p>All sets loaded from the <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent)">questions/</code> folder — always up to date with the repo</p>
+        <h1>Choose a Subject</h1>
+        <p>Select a category to view available question sets</p>
+      </div>
+      <div id="categoriesContainer"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (Now shows sets for selected category) -->
+  <div class="view" id="view-dashboard">
+    <nav class="topbar">
+      <button class="btn btn-ghost btn-sm" onclick="goToCategories()">← Back to Subjects</button>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="goHistory()">📊 History</button>
+        <button class="btn btn-primary btn-sm" onclick="openUploadModal()">+ Upload Set</button>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="page-header">
+        <h1 id="categoryTitle">Question Sets</h1>
+        <p id="categoryDesc">Select a quiz to begin</p>
       </div>
       <div id="setsContainer"></div>
     </div>
@@ -106,7 +124,7 @@
     <nav class="topbar">
       <a class="logo" href="admin.html">Riddler<span>Q</span></a>
       <div class="topbar-right">
-        <button class="btn btn-ghost btn-sm" onclick="goHome()">← Dashboard</button>
+        <button class="btn btn-ghost btn-sm" onclick="goToCategories()">← Subjects</button>
       </div>
     </nav>
     <div class="container">
