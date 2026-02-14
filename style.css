@@ -420,7 +420,22 @@ pre{
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
 .stat-n{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:3px}
 .stat-l{color:var(--muted);font-size:12px}
-.results-btns{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap}
+.results-btns{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:28px;
+  flex-wrap:wrap;
+}
+.results-btns .btn{
+  padding:12px 24px;
+  font-size:15px;
+  font-weight:600;
+  min-width:140px;
+}
+.results-btns .btn-primary{
+  box-shadow:0 2px 8px rgba(88,166,255,.2);
+}
 
 /* ── REVIEW ── */
 .review-section h3{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;margin-bottom:14px}
