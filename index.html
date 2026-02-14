@@ -28,6 +28,15 @@
     <div class="quiz-container">
       <!-- LEFT: Main quiz content -->
       <div class="quiz-main">
+        <!-- MOBILE: Progress boxes at top (above question) -->
+        <div class="progress-boxes-wrapper" id="progressWrapper">
+          <div class="progress-boxes-header" onclick="toggleProgressBoxes()">
+            <span>Questions</span>
+            <span class="progress-boxes-toggle">▲</span>
+          </div>
+          <div class="progress-boxes" id="progressBoxes"></div>
+        </div>
+
         <div class="progress-wrap">
           <div class="progress-fill" id="progFill" style="width:0%"></div>
         </div>
@@ -42,13 +51,12 @@
         </div>
       </div>
 
-      <!-- RIGHT: Progress boxes sidebar (desktop) / TOP: Collapsible (mobile) -->
-      <div class="progress-boxes-wrapper" id="progressWrapper">
-        <div class="progress-boxes-header" onclick="toggleProgressBoxes()">
+      <!-- RIGHT: Progress boxes sidebar (desktop only) -->
+      <div class="progress-boxes-sidebar" id="progressSidebar">
+        <div class="progress-boxes-header">
           <span>Questions</span>
-          <span class="progress-boxes-toggle">▼</span>
         </div>
-        <div class="progress-boxes" id="progressBoxes"></div>
+        <div class="progress-boxes" id="progressBoxesSidebar"></div>
       </div>
     </div>
   </div>
