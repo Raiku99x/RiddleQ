@@ -207,8 +207,13 @@ pre{
     flex:1;
     min-width:0;
   }
+  /* Hide mobile version on desktop */
   .progress-boxes-wrapper{
-    width:200px;
+    display:none;
+  }
+  /* Show sidebar version on desktop */
+  .progress-boxes-sidebar{
+    width:320px;
     position:sticky;
     top:0;
     height:100vh;
@@ -217,7 +222,7 @@ pre{
     border-left:1px solid var(--border);
     padding:20px 16px;
   }
-  .progress-boxes-header{
+  .progress-boxes-sidebar .progress-boxes-header{
     font-family:'Syne',sans-serif;
     font-weight:600;
     font-size:13px;
@@ -226,27 +231,24 @@ pre{
     text-transform:uppercase;
     letter-spacing:0.5px;
   }
-  .progress-boxes-toggle{
-    display:none;
-  }
-  .progress-boxes{
+  .progress-boxes-sidebar .progress-boxes{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:8px;
+    grid-template-columns:repeat(9, 1fr);
+    gap:6px;
     padding:0;
     background:transparent;
     border:none;
   }
-  .progress-box{
+  .progress-boxes-sidebar .progress-box{
     width:100%;
     aspect-ratio:1;
-    border-radius:6px;
+    border-radius:5px;
     border:1.5px solid var(--border);
     background:var(--surface2);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:12px;
+    font-size:10px;
     font-weight:600;
     color:var(--muted);
     cursor:pointer;
@@ -259,11 +261,17 @@ pre{
   .quiz-container{
     display:block;
   }
+  /* Hide sidebar version on mobile */
+  .progress-boxes-sidebar{
+    display:none;
+  }
+  /* Show wrapper version on mobile - positioned at top */
   .progress-boxes-wrapper{
     background:var(--bg);
     border-bottom:1px solid var(--border);
+    order:-1;
   }
-  .progress-boxes-header{
+  .progress-boxes-wrapper .progress-boxes-header{
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -275,7 +283,7 @@ pre{
     color:var(--text);
     user-select:none;
   }
-  .progress-boxes-toggle{
+  .progress-boxes-wrapper .progress-boxes-toggle{
     font-size:16px;
     color:var(--accent);
     transition:transform .2s;
@@ -283,7 +291,7 @@ pre{
   .progress-boxes-wrapper.collapsed .progress-boxes-toggle{
     transform:rotate(180deg);
   }
-  .progress-boxes{
+  .progress-boxes-wrapper .progress-boxes{
     display:flex;
     flex-wrap:wrap;
     gap:3px;
@@ -298,7 +306,7 @@ pre{
     max-height:0;
     padding-bottom:0;
   }
-  .progress-box{
+  .progress-boxes-wrapper .progress-box{
     width:20px;
     height:20px;
     min-width:20px;
