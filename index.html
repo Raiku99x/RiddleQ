@@ -11,6 +11,18 @@
 
 <div id="app">
 
+  <!-- EXIT CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="exitModal">
+    <div class="modal exit-modal">
+      <h2>Exit Quiz?</h2>
+      <p class="sub">Your progress will be lost and you'll return to the dashboard. Are you sure you want to exit?</p>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeExitModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmExit()">Exit Quiz</button>
+      </div>
+    </div>
+  </div>
+
   <!-- QUIZ -->
   <div class="view" id="view-quiz">
     <div class="quiz-topbar">
