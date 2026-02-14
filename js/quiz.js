@@ -141,7 +141,8 @@ function updateProgressBoxes() {
   // Update both mobile and desktop boxes
   const allBoxes = document.querySelectorAll('.progress-box');
   
-  allBoxes.forEach((box, i) => {
+  allBoxes.forEach((box) => {
+  const i = parseInt(box.getAttribute('data-index'));
     box.className = 'progress-box';
     
     const answer = Q.answers.find(a => a.idx === i);
