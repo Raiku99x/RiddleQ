@@ -36,6 +36,23 @@ document.addEventListener('fullscreenchange', () => {
   }
 });
 
+// ─── TOGGLE PROGRESS BOXES (MOBILE) ───────────────────────────────────────────
+function toggleProgressBoxes() {
+  // Only works on mobile (<=768px)
+  if (window.innerWidth <= 768) {
+    const wrapper = document.getElementById('progressWrapper');
+    wrapper.classList.toggle('collapsed');
+  }
+}
+
+// Auto-collapse on mobile by default
+function initProgressBoxes() {
+  if (window.innerWidth <= 768) {
+    const wrapper = document.getElementById('progressWrapper');
+    wrapper.classList.add('collapsed');
+  }
+}
+
 // ─── START ────────────────────────────────────────────────────────────────────
 function startQuiz(setId) {
   const set = resolveSet(setId);   // synchronous — no fetch
@@ -58,6 +75,7 @@ function startQuiz(setId) {
 
   document.getElementById('quizName').textContent = set.name;
   showView('quiz');
+  initProgressBoxes(); // Initialize collapsed state on mobile
   renderProgressBoxes();
   renderQ();
 }
@@ -207,4 +225,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const setId = new URLSearchParams(window.location.search).get('set');
   if (!setId) { window.location.href = 'admin.html'; return; }
   startQuiz(decodeURIComponent(setId));
+});
+
+// Handle window resize to reset collapse state
+window.addEventListener('resize', () => {
+  const wrapper = document.getElementById('progressWrapper');
+  if (wrapper) {
+    if (window.innerWidth > 768) {
+      // Desktop: remove collapsed class
+      wrapper.classList.remove('collapsed');
+    } else {
+      // Mobile: add collapsed class if not already present
+      if (!wrapper.classList.contains('collapsed')) {
+        wrapper.classList.add('collapsed');
+      }
+    }
+  }
 });
