@@ -1,508 +1,140 @@
-/* ── VARIABLES ── */
-:root {
-  --bg:          #0d1117;
-  --surface:     #161b22;
-  --surface2:    #21262d;
-  --border:      #30363d;
-  --text:        #e6edf3;
-  --muted:       #8b949e;
-  --accent:      #58a6ff;
-  --accent-dim:  rgba(88,166,255,.12);
-  --success:     #3fb950;
-  --success-dim: rgba(63,185,80,.12);
-  --danger:      #f85149;
-  --danger-dim:  rgba(248,81,73,.12);
-  --warning:     #d29922;
-  --warning-dim: rgba(210,153,34,.12);
-  --r: 10px;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RiddlerQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
 
-/* ── RESET ── */
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--bg);color:var(--text);
-  min-height:100vh;-webkit-font-smoothing:antialiased;
-}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+<div id="app">
 
-/* ── VIEWS ── */
-.view{display:none;animation:fadeUp .22s ease}
-.view.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  <!-- EXIT CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="exitModal">
+    <div class="modal exit-modal">
+      <h2>Exit Quiz?</h2>
+      <p class="sub">Your progress will be lost and you'll return to the dashboard. Are you sure you want to exit?</p>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeExitModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmExit()">Exit Quiz</button>
+      </div>
+    </div>
+  </div>
 
-/* ── TOPBAR ── */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 32px;
-  border-bottom:1px solid var(--border);
-  background:var(--bg);
-  position:sticky;top:0;z-index:50;
-}
-.logo{
-  font-family:'Syne',sans-serif;font-weight:800;font-size:22px;
-  letter-spacing:-.5px;color:var(--text);text-decoration:none;
-}
-.logo span{color:var(--accent)}
-.topbar-right{display:flex;gap:10px;align-items:center}
+  <!-- QUIZ -->
+  <div class="view" id="view-quiz">
+    <div class="quiz-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="exitQuiz()" title="Exit">✕</button>
+        <span class="quiz-set-name" id="quizName"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="quiz-counter" id="counter"></span>
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="toggleFullscreen()" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
+      </div>
+    </div>
+    
+    <!-- NEW: Quiz container with sidebar layout -->
+    <div class="quiz-container">
+      <!-- LEFT: Main quiz content -->
+      <div class="quiz-main">
+        <!-- MOBILE: Progress boxes at top (above question) -->
+        <div class="progress-boxes-wrapper" id="progressWrapper">
+          <div class="progress-boxes-header" onclick="toggleProgressBoxes()">
+            <span>Questions</span>
+            <span class="progress-boxes-toggle">▲</span>
+          </div>
+          <div class="progress-boxes" id="progressBoxes"></div>
+        </div>
 
-/* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:9px 18px;border-radius:var(--r);
-  border:1px solid var(--border);background:var(--surface2);
-  color:var(--text);font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:500;cursor:pointer;
-  transition:all .14s;white-space:nowrap;text-decoration:none;
-}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:#0d1117;font-weight:600}
-.btn-primary:hover{background:#79b8ff;border-color:#79b8ff;color:#0d1117}
-.btn-ghost{background:transparent;border-color:transparent}
-.btn-ghost:hover{background:var(--surface2);border-color:var(--border);color:var(--text)}
-.btn-danger:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-dim)}
-.btn-sm{padding:6px 13px;font-size:13px}
-.btn-icon{padding:8px;border-radius:8px}
+        <div class="progress-wrap">
+          <div class="progress-fill" id="progFill" style="width:0%"></div>
+        </div>
 
-/* ── LAYOUT ── */
-.container   {max-width:900px;margin:0 auto;padding:40px 24px}
-.container-sm{max-width:640px;margin:0 auto;padding:40px 24px}
-.page-header{margin-bottom:32px}
-.page-header h1{font-family:'Syne',sans-serif;font-weight:700;font-size:26px;margin-bottom:6px}
-.page-header p{color:var(--muted);font-size:14px}
-.section-label{
-  font-family:'Syne',sans-serif;font-weight:700;font-size:16px;
-  margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;
-}
-.section-label span{font-family:'DM Sans',sans-serif;font-weight:400;font-size:13px;color:var(--muted)}
-.divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+        <div class="quiz-body">
+          <p class="question-text" id="qText"></p>
+          <div class="options-list" id="optList"></div>
+          <div id="expBox"></div>
+          <div class="quiz-footer">
+            <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQ()">Next →</button>
+          </div>
+        </div>
+      </div>
 
-/* ── BANNERS ── */
-.banner{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:13px 16px;border-radius:var(--r);
-  font-size:13px;line-height:1.5;margin-bottom:20px;
-}
-.banner-warning{background:var(--warning-dim);border:1px solid rgba(210,153,34,.3);color:#f0c060}
-.banner-info   {background:var(--accent-dim);border:1px solid rgba(88,166,255,.25);color:#79b8ff}
-.banner-icon{font-size:16px;margin-top:1px;flex-shrink:0}
-.banner strong{color:inherit;display:block;margin-bottom:2px}
+      <!-- RIGHT: Progress boxes sidebar (desktop only) -->
+      <div class="progress-boxes-sidebar" id="progressSidebar">
+        <div class="progress-boxes-header">
+          <span>Questions</span>
+        </div>
+        <div class="progress-boxes" id="progressBoxesSidebar"></div>
+      </div>
+    </div>
+  </div>
 
-/* ── SETS GRID ── */
-.sets-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-  gap:14px;margin-bottom:8px;
-}
-.set-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:20px;cursor:pointer;
-  transition:all .14s;position:relative;
-}
-.set-card:hover{
-  border-color:var(--accent);background:var(--surface2);
-  transform:translateY(-2px);box-shadow:0 4px 20px rgba(88,166,255,.08);
-}
-.category-card{
-  min-height:140px;
-}
-.set-card h3{font-family:'Syne',sans-serif;font-weight:600;font-size:15px;margin-bottom:4px}
-.set-card-meta{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:14px}
-.set-card-footer{display:flex;align-items:center;gap:8px}
-.set-card-delete{margin-left:auto;opacity:0;transition:opacity .14s}
-.set-card:hover .set-card-delete{opacity:1}
-.folder-badge{
-  margin-left:auto;font-size:11px;padding:3px 9px;
-  border-radius:20px;background:var(--accent-dim);color:var(--accent);
-  font-weight:600;letter-spacing:.2px;
-}
+  <!-- RESULTS -->
+  <div class="view" id="view-results">
+    <nav class="topbar">
+      <a class="logo" href="admin.html">Riddler<span>Q</span></a>
+      <div class="topbar-right">
+        <span style="font-size:13px;color:var(--muted)" id="resSet"></span>
+      </div>
+    </nav>
 
-/* ── EMPTY STATE ── */
-.empty-state{
-  text-align:center;padding:60px 20px;
-  border:1px dashed var(--border);border-radius:var(--r);
-}
-.empty-state-icon{font-size:40px;margin-bottom:14px}
-.empty-state h3{font-family:'Syne',sans-serif;font-weight:600;margin-bottom:6px}
-.empty-state p{color:var(--muted);font-size:14px;margin-bottom:20px}
-.empty-state code{background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent);font-size:13px}
+    <div class="container-sm">
+      <div class="results-hero">
+        <div class="ring">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="56" fill="none" stroke="#21262d" stroke-width="10"/>
+            <circle id="arc" cx="65" cy="65" r="56" fill="none"
+              stroke="#58a6ff" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="352" stroke-dashoffset="352"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ringPct"></span>
+            <span class="ring-sub">score</span>
+          </div>
+        </div>
+        <h2 id="resTitle"></h2>
+        <p id="resSub"></p>
+      </div>
 
-/* ── MODAL ── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.72);z-index:200;
-  align-items:center;justify-content:center;
-  backdrop-filter:blur(4px);
-}
-.modal-overlay.open{display:flex;animation:fadeIn .18s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;padding:28px;
-  width:100%;max-width:500px;margin:16px;
-  animation:scaleIn .2s ease;max-height:90vh;overflow-y:auto;
-}
-@keyframes scaleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-.modal h2{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:5px}
-.modal .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
-.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+      <div class="stats-row" id="statsRow"></div>
 
-/* Exit Confirmation Modal */
-.exit-modal{
-  max-width:420px;
-}
-.exit-modal h2{
-  font-size:20px;
-  margin-bottom:8px;
-}
-.exit-modal .sub{
-  line-height:1.5;
-}
+      <div class="results-btns">
+        <button class="btn btn-primary" onclick="retake()">↺ Retake</button>
+        <button class="btn" onclick="goHome()">✕ Exit</button>
+        <button class="btn" onclick="goHistory()">📊 History</button>
+      </div>
 
-/* ── FORM ── */
-.form-group{margin-bottom:16px}
-.form-label{display:block;font-size:13px;font-weight:500;margin-bottom:7px;color:var(--muted)}
-.form-input{
-  width:100%;padding:10px 14px;background:var(--bg);
-  border:1px solid var(--border);border-radius:8px;
-  color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;
-  transition:border-color .14s;
-}
-.form-input:focus{outline:none;border-color:var(--accent)}
-.form-input::placeholder{color:var(--muted)}
+      <div class="review-section">
+        <h3>Answer Review <span style="font-size:13px;font-weight:400;color:var(--muted)">— click to expand</span></h3>
+        <div class="review-list" id="reviewList"></div>
+      </div>
 
-/* ── DROP ZONE ── */
-.drop-zone{
-  border:2px dashed var(--border);border-radius:var(--r);
-  padding:28px;text-align:center;cursor:pointer;transition:all .14s;
-}
-.drop-zone:hover,.drop-zone.dragover{border-color:var(--accent);background:var(--accent-dim)}
-.drop-zone-icon{font-size:28px;margin-bottom:10px}
-.drop-zone p{font-size:14px;color:var(--muted)}
-.drop-zone strong{color:var(--accent)}
-.drop-zone-file{font-size:13px;color:var(--success);margin-top:8px;font-weight:500}
-.drop-zone-error{font-size:13px;color:var(--danger);margin-top:8px}
+      <div style="height:48px"></div>
+      
+      <footer class="footer">
+        <p>by <strong>Lhoel</strong> - BSCS Student</p>
+      </footer>
+    </div>
+  </div>
 
-/* ── CODE FORMAT CARD ── */
-.format-card{
-  background:var(--bg);border:1px solid var(--border);
-  border-radius:var(--r);padding:16px 18px;margin-top:18px;
-}
-.format-card h3{font-family:'Syne',sans-serif;font-weight:600;font-size:13px;margin-bottom:10px;color:var(--muted)}
-pre{
-  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:12px 14px;font-size:12px;line-height:1.65;color:#79b8ff;overflow-x:auto;
-}
-.format-note{color:var(--muted);font-size:12px;margin-top:8px}
-.format-note code{background:var(--surface2);padding:1px 5px;border-radius:4px;color:var(--accent);font-size:11px}
+</div>
 
-/* ── QUIZ HEADER ── */
-.quiz-topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 28px;border-bottom:1px solid var(--border);
-  background:var(--bg);position:sticky;top:0;z-index:40;
-}
-.quiz-set-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px}
-.quiz-counter{color:var(--muted);font-size:14px}
+<div class="toast" id="toast"></div>
 
-/* ── PROGRESS BOXES - RESPONSIVE LAYOUT ── */
-/* Desktop: Sticky sidebar on right */
-@media(min-width:769px){
-  .quiz-container{
-    display:flex;
-    gap:0;
-  }
-  .quiz-main{
-    flex:1;
-    min-width:0;
-  }
-  /* Hide mobile version on desktop */
-  .progress-boxes-wrapper{
-    display:none;
-  }
-  /* Show sidebar version on desktop */
-  .progress-boxes-sidebar{
-    width:320px;
-    position:sticky;
-    top:0;
-    height:100vh;
-    overflow-y:auto;
-    background:var(--surface);
-    border-left:1px solid var(--border);
-    padding:20px 16px;
-  }
-  .progress-boxes-sidebar .progress-boxes-header{
-    font-family:'Syne',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    color:var(--muted);
-    margin-bottom:12px;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-  }
-  .progress-boxes-sidebar .progress-boxes{
-    display:grid;
-    grid-template-columns:repeat(9, 1fr);
-    gap:6px;
-    padding:0;
-    background:transparent;
-    border:none;
-  }
-  .progress-boxes-sidebar .progress-box{
-    width:100%;
-    aspect-ratio:1;
-    border-radius:5px;
-    border:1.5px solid var(--border);
-    background:var(--surface2);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:10px;
-    font-weight:600;
-    color:var(--muted);
-    cursor:pointer;
-    transition:all .14s;
-  }
-}
+<!-- Load all question sets -->
+<script src="questions/ethics.js"></script>
+<script src="questions/contemporary-world.js"></script>
+<script src="questions/discrete-structure-1.js"></script>
+<script src="questions/calculus.js"></script>
+<script src="questions/pathfit-2.js"></script>
+<script src="questions/intermediate-programming.js"></script>
+<script src="questions/nstp.js"></script>
 
-/* Mobile: Collapsible at top */
-@media(max-width:768px){
-  .quiz-container{
-    display:block;
-  }
-  /* Hide sidebar version on mobile */
-  .progress-boxes-sidebar{
-    display:none;
-  }
-  /* Show wrapper version on mobile - positioned at top */
-  .progress-boxes-wrapper{
-    background:var(--bg);
-    border-bottom:1px solid var(--border);
-    order:-1;
-  }
-  .progress-boxes-wrapper .progress-boxes-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px 16px;
-    cursor:pointer;
-    font-family:'Syne',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    color:var(--text);
-    user-select:none;
-  }
-  .progress-boxes-wrapper .progress-boxes-toggle{
-    font-size:16px;
-    color:var(--accent);
-    transition:transform .2s;
-  }
-  .progress-boxes-wrapper.collapsed .progress-boxes-toggle{
-    transform:rotate(180deg);
-  }
-  .progress-boxes-wrapper .progress-boxes{
-    display:flex;
-    flex-wrap:wrap;
-    gap:3px;
-    padding:0 16px 12px;
-    background:transparent;
-    border:none;
-    max-height:500px;
-    overflow:hidden;
-    transition:max-height .3s ease, padding .3s ease;
-  }
-  .progress-boxes-wrapper.collapsed .progress-boxes{
-    max-height:0;
-    padding-bottom:0;
-  }
-  .progress-boxes-wrapper .progress-box{
-    width:20px;
-    height:20px;
-    min-width:20px;
-    border-radius:4px;
-    border:1.5px solid var(--border);
-    background:var(--surface2);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:9px;
-    font-weight:600;
-    color:var(--muted);
-    cursor:pointer;
-    transition:all .14s;
-  }
-}
-
-/* Common styles for both layouts */
-.progress-box:hover{
-  border-color:var(--accent);
-  transform:scale(1.05);
-}
-.progress-box.current{
-  border-color:var(--accent);
-  background:var(--accent-dim);
-  color:var(--accent);
-  box-shadow:0 0 0 2px rgba(88,166,255,.12);
-}
-.progress-box.correct{
-  border-color:#3fb950;
-  background:#3fb950;
-  color:#0d1117;
-}
-.progress-box.wrong{
-  border-color:var(--danger);
-  background:var(--danger);
-  color:#fff;
-}
-.progress-box.unanswered{
-  border-color:var(--border);
-  background:var(--surface2);
-  color:var(--muted);
-}
-
-.progress-wrap{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s ease}
-
-/* ── QUESTION ── */
-.quiz-body{padding:40px 28px;max-width:680px;margin:0 auto}
-.question-text{
-  font-family:'Syne',sans-serif;font-weight:600;font-size:20px;
-  line-height:1.45;margin-bottom:28px;
-}
-.options-list{display:flex;flex-direction:column;gap:10px}
-.opt{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 18px;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--r);
-  color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;
-  cursor:pointer;transition:all .14s;text-align:left;width:100%;
-}
-.opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim)}
-.opt:hover:not(:disabled) .opt-key{background:var(--accent);border-color:var(--accent);color:#0d1117}
-.opt-key{
-  width:28px;height:28px;min-width:28px;border-radius:6px;
-  background:var(--surface2);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:600;color:var(--muted);transition:all .14s;
-}
-.opt.correct              {border-color:var(--success);background:var(--success-dim)}
-.opt.correct  .opt-key    {background:var(--success);border-color:var(--success);color:#0d1117}
-.opt.wrong                {border-color:var(--danger);background:var(--danger-dim)}
-.opt.wrong    .opt-key    {background:var(--danger);border-color:var(--danger);color:#fff}
-.opt.selected             {border-color:var(--success);background:var(--success-dim)}
-.opt.selected .opt-key    {background:var(--success);border-color:var(--success);color:#0d1117}
-.opt:disabled{cursor:default}
-.quiz-footer{display:flex;justify-content:flex-end;margin-top:24px}
-.explanation{
-  margin-top:14px;padding:13px 15px;
-  background:var(--surface2);border-left:3px solid var(--accent);
-  border-radius:0 var(--r) var(--r) 0;
-  font-size:14px;color:var(--muted);animation:fadeUp .2s ease;
-}
-.explanation strong{color:var(--text)}
-
-/* ── RESULTS ── */
-.results-hero{text-align:center;padding:44px 20px 32px}
-.ring{width:130px;height:130px;margin:0 auto 18px;position:relative}
-.ring svg{transform:rotate(-90deg)}
-.ring-label{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-}
-.ring-pct{font-family:'Syne',sans-serif;font-weight:800;font-size:26px}
-.ring-sub{font-size:12px;color:var(--muted)}
-.results-hero h2{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:5px}
-.results-hero p{color:var(--muted);font-size:14px}
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
-.stat-n{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:3px}
-.stat-l{color:var(--muted);font-size:12px}
-.results-btns{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-bottom:28px;
-  flex-wrap:wrap;
-}
-.results-btns .btn{
-  padding:12px 24px;
-  font-size:15px;
-  font-weight:600;
-  min-width:140px;
-}
-.results-btns .btn-primary{
-  box-shadow:0 2px 8px rgba(88,166,255,.2);
-}
-
-/* ── REVIEW ── */
-.review-section h3{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;margin-bottom:14px}
-.review-list{display:flex;flex-direction:column;gap:9px}
-.rev-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.rev-head{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer}
-.rev-status{
-  width:22px;height:22px;min-width:22px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:11px;
-}
-.rev-status.ok  {background:var(--success-dim);color:var(--success)}
-.rev-status.fail{background:var(--danger-dim); color:var(--danger)}
-.rev-q{flex:1;font-size:14px;font-weight:500;line-height:1.4}
-.rev-chevron{color:var(--muted);font-size:11px;transition:transform .2s}
-.rev-item.open .rev-chevron{transform:rotate(180deg)}
-.rev-body{display:none;padding:0 15px 13px 49px;font-size:13px}
-.rev-item.open .rev-body{display:block}
-.rev-ans{margin-bottom:3px;color:var(--muted)}
-.rev-ans span{font-weight:500;color:var(--text)}
-.rev-ans.correct span{color:var(--success)}
-.rev-ans.wrong   span{color:var(--danger)}
-.rev-exp{color:var(--muted);font-style:italic;margin-top:6px}
-
-/* ── HISTORY ── */
-.hist-table{width:100%;border-collapse:collapse}
-.hist-table th,.hist-table td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--border);font-size:14px}
-.hist-table th{color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;background:var(--surface)}
-.hist-table tr:hover td{background:var(--surface)}
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:600}
-.b-green {background:var(--success-dim);color:var(--success)}
-.b-yellow{background:var(--warning-dim); color:var(--warning)}
-.b-red   {background:var(--danger-dim);  color:var(--danger)}
-
-/* ── TOAST ── */
-.toast{
-  position:fixed;bottom:22px;right:22px;
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:10px;padding:12px 18px;font-size:14px;
-  display:flex;align-items:center;gap:9px;z-index:999;max-width:320px;
-  transform:translateY(70px);opacity:0;transition:all .28s ease;
-}
-.toast.show        {transform:translateY(0);opacity:1}
-.toast.show.success{border-color:var(--success)}
-.toast.show.error  {border-color:var(--danger)}
-
-/* ── RESPONSIVE ── */
-@media(max-width:600px){
-  .topbar,.quiz-topbar{padding:13px 16px}
-  .container,.container-sm{padding:24px 16px}
-  .quiz-body{padding:24px 16px}
-  .stats-row{grid-template-columns:1fr 1fr}
-  .sets-grid{grid-template-columns:1fr}
-}
-
-/* ── FOOTER ── */
-.footer{
-  text-align:center;
-  padding:20px 20px 16px;
-  margin-top:32px;
-  border-top:1px solid var(--border);
-}
-.footer p{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.4;
-}
-.footer strong{
-  color:var(--accent);
-  font-weight:600;
-}
+<script src="js/storage.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>
