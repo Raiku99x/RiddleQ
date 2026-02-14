@@ -13,8 +13,34 @@ function showView(id) {
 
 function goHome()    { window.location.href = 'admin.html'; }
 function goHistory() { window.location.href = 'admin.html?view=history'; }
-function exitQuiz()  { if (confirm('Exit? Your progress will be lost.')) goHome(); }
 function retake()    { window.location.href = `index.html?set=${encodeURIComponent(Q.setId)}`; }
+
+// ─── EXIT QUIZ MODAL ──────────────────────────────────────────────────────────
+function exitQuiz() {
+  const modal = document.getElementById('exitModal');
+  modal.classList.add('open');
+  // Prevent scrolling when modal is open
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExitModal() {
+  const modal = document.getElementById('exitModal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function confirmExit() {
+  closeExitModal();
+  goHome();
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', (e) => {
+  const modal = document.getElementById('exitModal');
+  if (modal && e.target === modal) {
+    closeExitModal();
+  }
+});
 
 // ─── FULLSCREEN ───────────────────────────────────────────────────────────────
 function toggleFullscreen() {
