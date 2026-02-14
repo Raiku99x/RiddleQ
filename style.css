@@ -150,6 +150,18 @@ body{
 .modal .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
 .modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
 
+/* Exit Confirmation Modal */
+.exit-modal{
+  max-width:420px;
+}
+.exit-modal h2{
+  font-size:20px;
+  margin-bottom:8px;
+}
+.exit-modal .sub{
+  line-height:1.5;
+}
+
 /* ── FORM ── */
 .form-group{margin-bottom:16px}
 .form-label{display:block;font-size:13px;font-weight:500;margin-bottom:7px;color:var(--muted)}
@@ -380,8 +392,8 @@ pre{
 .opt.correct  .opt-key    {background:var(--success);border-color:var(--success);color:#0d1117}
 .opt.wrong                {border-color:var(--danger);background:var(--danger-dim)}
 .opt.wrong    .opt-key    {background:var(--danger);border-color:var(--danger);color:#fff}
-.opt.selected             {border-color:var(--accent);background:var(--accent-dim)}
-.opt.selected .opt-key    {background:var(--accent);border-color:var(--accent);color:#0d1117}
+.opt.selected             {border-color:var(--success);background:var(--success-dim)}
+.opt.selected .opt-key    {background:var(--success);border-color:var(--success);color:#0d1117}
 .opt:disabled{cursor:default}
 .quiz-footer{display:flex;justify-content:flex-end;margin-top:24px}
 .explanation{
