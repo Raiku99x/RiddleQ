@@ -42,14 +42,23 @@ function toggleProgressBoxes() {
   if (window.innerWidth <= 768) {
     const wrapper = document.getElementById('progressWrapper');
     wrapper.classList.toggle('collapsed');
+    // Update arrow direction
+    const toggle = wrapper.querySelector('.progress-boxes-toggle');
+    if (wrapper.classList.contains('collapsed')) {
+      toggle.textContent = '▼';
+    } else {
+      toggle.textContent = '▲';
+    }
   }
 }
 
-// Auto-collapse on mobile by default
+// Auto-expand on mobile by default (changed from collapsed)
 function initProgressBoxes() {
   if (window.innerWidth <= 768) {
     const wrapper = document.getElementById('progressWrapper');
-    wrapper.classList.add('collapsed');
+    wrapper.classList.remove('collapsed'); // Expanded by default
+    const toggle = wrapper.querySelector('.progress-boxes-toggle');
+    toggle.textContent = '▲'; // Up arrow when expanded
   }
 }
 
@@ -82,10 +91,23 @@ function startQuiz(setId) {
 
 // ─── PROGRESS BOXES ──────────────────────────────────────────────────────────
 function renderProgressBoxes() {
-  const container = document.getElementById('progressBoxes');
-  container.innerHTML = Q.list.map((_, i) => 
+  // Render boxes for both mobile and desktop containers
+  const boxesHTML = Q.list.map((_, i) => 
     `<div class="progress-box" data-index="${i}" onclick="jumpToQuestion(${i})">${i + 1}</div>`
   ).join('');
+  
+  // Mobile container
+  const mobileContainer = document.getElementById('progressBoxes');
+  if (mobileContainer) {
+    mobileContainer.innerHTML = boxesHTML;
+  }
+  
+  // Desktop sidebar container
+  const desktopContainer = document.getElementById('progressBoxesSidebar');
+  if (desktopContainer) {
+    desktopContainer.innerHTML = boxesHTML;
+  }
+  
   updateProgressBoxes();
 }
 
@@ -232,12 +254,15 @@ window.addEventListener('resize', () => {
   const wrapper = document.getElementById('progressWrapper');
   if (wrapper) {
     if (window.innerWidth > 768) {
-      // Desktop: remove collapsed class
+      // Desktop: remove collapsed class and hide mobile wrapper
       wrapper.classList.remove('collapsed');
     } else {
-      // Mobile: add collapsed class if not already present
-      if (!wrapper.classList.contains('collapsed')) {
-        wrapper.classList.add('collapsed');
+      // Mobile: keep expanded by default unless user collapsed it manually
+      const toggle = wrapper.querySelector('.progress-boxes-toggle');
+      if (wrapper.classList.contains('collapsed')) {
+        toggle.textContent = '▼';
+      } else {
+        toggle.textContent = '▲';
       }
     }
   }
