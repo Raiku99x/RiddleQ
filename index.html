@@ -13,32 +13,42 @@
 
   <!-- QUIZ -->
   <div class="view" id="view-quiz">
-    <div>
-      <div class="quiz-topbar">
-        <div style="display:flex;align-items:center;gap:12px">
-          <button class="btn btn-ghost btn-icon btn-sm" onclick="exitQuiz()" title="Exit">✕</button>
-          <span class="quiz-set-name" id="quizName"></span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span class="quiz-counter" id="counter"></span>
-          <button class="btn btn-ghost btn-icon btn-sm" onclick="toggleFullscreen()" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
-        </div>
+    <div class="quiz-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="exitQuiz()" title="Exit">✕</button>
+        <span class="quiz-set-name" id="quizName"></span>
       </div>
-      
-      <!-- PROGRESS BOXES -->
-      <div class="progress-boxes" id="progressBoxes"></div>
-      
-      <div class="progress-wrap">
-        <div class="progress-fill" id="progFill" style="width:0%"></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="quiz-counter" id="counter"></span>
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="toggleFullscreen()" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
       </div>
     </div>
+    
+    <!-- NEW: Quiz container with sidebar layout -->
+    <div class="quiz-container">
+      <!-- LEFT: Main quiz content -->
+      <div class="quiz-main">
+        <div class="progress-wrap">
+          <div class="progress-fill" id="progFill" style="width:0%"></div>
+        </div>
 
-    <div class="quiz-body">
-      <p class="question-text" id="qText"></p>
-      <div class="options-list" id="optList"></div>
-      <div id="expBox"></div>
-      <div class="quiz-footer">
-        <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQ()">Next →</button>
+        <div class="quiz-body">
+          <p class="question-text" id="qText"></p>
+          <div class="options-list" id="optList"></div>
+          <div id="expBox"></div>
+          <div class="quiz-footer">
+            <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQ()">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Progress boxes sidebar (desktop) / TOP: Collapsible (mobile) -->
+      <div class="progress-boxes-wrapper" id="progressWrapper">
+        <div class="progress-boxes-header" onclick="toggleProgressBoxes()">
+          <span>Questions</span>
+          <span class="progress-boxes-toggle">▼</span>
+        </div>
+        <div class="progress-boxes" id="progressBoxes"></div>
       </div>
     </div>
   </div>
