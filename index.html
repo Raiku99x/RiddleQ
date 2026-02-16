@@ -6,6 +6,8 @@
   <title>RiddlerQ</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
+  <!-- Load theme before page renders to prevent flash -->
+  <script src="js/theme.js"></script>
 </head>
 <body>
 
@@ -32,15 +34,16 @@
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="quiz-counter" id="counter"></span>
+        <button class="theme-toggle" onclick="Theme.toggle()" title="Toggle theme">☀️</button>
         <button class="btn btn-ghost btn-icon btn-sm" onclick="toggleFullscreen()" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
       </div>
     </div>
     
-    <!-- NEW: Quiz container with sidebar layout -->
+    <!-- Quiz container with sidebar layout -->
     <div class="quiz-container">
       <!-- LEFT: Main quiz content -->
       <div class="quiz-main">
-        <!-- MOBILE: Progress boxes at top (above question) -->
+        <!-- MOBILE: Progress boxes at top -->
         <div class="progress-boxes-wrapper" id="progressWrapper">
           <div class="progress-boxes-header" onclick="toggleProgressBoxes()">
             <span>Questions</span>
@@ -79,6 +82,7 @@
       <a class="logo" href="admin.html">Riddler<span>Q</span></a>
       <div class="topbar-right">
         <span style="font-size:13px;color:var(--muted)" id="resSet"></span>
+        <button class="theme-toggle" onclick="Theme.toggle()" title="Toggle theme">☀️</button>
       </div>
     </nav>
 
@@ -86,7 +90,7 @@
       <div class="results-hero">
         <div class="ring">
           <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle cx="65" cy="65" r="56" fill="none" stroke="#21262d" stroke-width="10"/>
+            <circle cx="65" cy="65" r="56" fill="none" stroke="var(--surface2)" stroke-width="10"/>
             <circle id="arc" cx="65" cy="65" r="56" fill="none"
               stroke="#58a6ff" stroke-width="10" stroke-linecap="round"
               stroke-dasharray="352" stroke-dashoffset="352"/>
