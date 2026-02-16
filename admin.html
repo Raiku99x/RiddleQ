@@ -6,6 +6,8 @@
   <title>RiddlerQ</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
+  <!-- Load theme before page renders to prevent flash -->
+  <script src="js/theme.js"></script>
 </head>
 <body>
 
@@ -24,12 +26,13 @@
 <!-- ── APP ─────────────────────────────────────────────────────────────────── -->
 <div id="app">
 
-  <!-- CATEGORIES (NEW - First Screen) -->
+  <!-- CATEGORIES -->
   <div class="view" id="view-categories">
     <nav class="topbar">
       <a class="logo" href="admin.html">Riddler<span>Q</span></a>
       <div class="topbar-right">
         <button class="btn btn-ghost btn-sm" onclick="goHistory()">History</button>
+        <button class="theme-toggle" onclick="Theme.toggle()" title="Toggle theme">☀️</button>
       </div>
     </nav>
     <div class="container">
@@ -45,12 +48,13 @@
     </div>
   </div>
 
-  <!-- DASHBOARD (Now shows sets for selected category) -->
+  <!-- DASHBOARD -->
   <div class="view" id="view-dashboard">
     <nav class="topbar">
       <button class="btn btn-ghost btn-sm" onclick="goToCategories()">← Back to Subjects</button>
       <div class="topbar-right">
         <button class="btn btn-ghost btn-sm" onclick="goHistory()">History</button>
+        <button class="theme-toggle" onclick="Theme.toggle()" title="Toggle theme">☀️</button>
       </div>
     </nav>
     <div class="container">
@@ -72,6 +76,7 @@
       <a class="logo" href="admin.html">Riddler<span>Q</span></a>
       <div class="topbar-right">
         <button class="btn btn-ghost btn-sm" onclick="goToCategories()">← Subjects</button>
+        <button class="theme-toggle" onclick="Theme.toggle()" title="Toggle theme">☀️</button>
       </div>
     </nav>
     <div class="container">
